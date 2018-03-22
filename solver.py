@@ -1,7 +1,7 @@
-from re import match, findall
 from abc import abstractmethod, ABC
+from decimal import Decimal
+from re import match
 from typing import List
-from decimal import Decimal, InvalidOperation
 
 
 class Operation(ABC):
@@ -82,6 +82,7 @@ class DeleteOperation(Operation):
 
 class ConvertNumOperation(Operation):
     def __init__(self, old: Decimal, new: Decimal):
+        # noinspection PyTypeChecker
         super().__init__(None, '=>')
         if isinstance(old, str):
             old = Decimal(old)
@@ -114,11 +115,11 @@ op_names = {None: NumberOperation,
 def parse_operation(op_str: str) -> Operation:
     parts = match(r'((\d+)?([+\-*x/%]|<<|=>))?(\d+)?', op_str)
     if parts:
-        opd, num, sign, num2, = parts.groups()
+        _, pre_num, sign, post_num, = parts.groups()
         if sign == '=>':
-            rv = op_names[sign](num, num2)
+            rv = op_names[sign](pre_num, post_num)
         else:
-            rv = op_names[sign](num2)
+            rv = op_names[sign](post_num)
         return rv
 
 
@@ -200,7 +201,7 @@ if __name__ == '__main__':
 
     for level in levels_from_25:
         solution = level.solve()
-        print('|{:5}|{:6}|{:2}|{:20}|{:20}|'.format(level.start,
+        print('|{:5}|{:6}|{:2}|{:20}|{:22}|'.format(level.start,
                                                     level.goal,
                                                     level.step_count,
                                                     render_ops(level.operations),
