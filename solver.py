@@ -80,6 +80,17 @@ class DeleteOperation(Operation):
         return '{}'.format(self.symbol)
 
 
+class ChangeSignOperation(Operation):
+    def __init__(self, number=None):
+        super().__init__(number, '+/-')
+
+    def __call__(self, arg: Decimal) -> Decimal:
+        return arg * Decimal('-1')
+
+    def __str__(self):
+        return '{}'.format(self.symbol)
+
+
 class ConvertNumOperation(Operation):
     def __init__(self, old: Decimal, new: Decimal):
         # noinspection PyTypeChecker
@@ -109,11 +120,12 @@ op_names = {None: NumberOperation,
             'x': MultiplyOperation,
             '/': DivideOperation,
             '<<': DeleteOperation,
-            '=>': ConvertNumOperation}
+            '=>': ConvertNumOperation,
+            '+/-': ChangeSignOperation}
 
 
 def parse_operation(op_str: str) -> Operation:
-    parts = match(r'((\d+)?([+\-*x/%]|<<|=>))?(\d+)?', op_str)
+    parts = match(r'((\d+)?(\+/-|[+\-*x/%]|<<|=>))?(\d+)?', op_str)
     if parts:
         _, pre_num, sign, post_num, = parts.groups()
         if sign == '=>':
@@ -197,6 +209,11 @@ if __name__ == '__main__':
             goal=Decimal(29),
             step_count=5,
             operations=parse_operations('/2 +3 1=>2 2=>9')),
+
+        MGS(start=Decimal(0),
+            goal=Decimal(245),
+            step_count=5,
+            operations=parse_operations('-3 5 x4 +/-'))
     ]
 
     for level in levels_from_25:

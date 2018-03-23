@@ -15,6 +15,7 @@ Feature: Solve "calculator - the game puzzles"
       | 0     | 2    | 5     | +4 x9 <<   | +4 x9 << x9 << |
       | 0     | 210  | 5     | +5 -5 5 2  | 2 5 -5 5 +5    |
       | 171   | 23   | 4     | x2 -9 <<   | -9 x2 << -9    |
+      | -3    | 3    | 1     | +/-        | +/-            |
       | 0     | 1    | 1     | +1         | +1             |
       | 0     | 2    | 2     | +1         | +1 +1          |
       | 0     | 8    | 3     | +2 +3      | +2 +3 +3       |
@@ -43,3 +44,4 @@ Feature: Solve "calculator - the game puzzles"
       | /4   | DivideOperation('4')     |
       | <<   | DeleteOperation()        |
       | 1=>2 | ConvertNumOperation(1,2) |
+      | +/-  | ChangeSignOperation()    |
